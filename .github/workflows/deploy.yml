@@ -1,0 +1,39 @@
+name: Deploy MkDocs (private repo 대응)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write   # ✅ GITHUB_TOKEN이 push 권한을 갖도록 설정
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material ghp-import
+
+      - name: Build site
+        run: mkdocs build
+
+      - name: Deploy to gh-pages (✅ GITHUB_TOKEN 사용)
+        run: |
+          git config --global user.name "carami"
+          git config --global user.email "carami@nate.com"
+
+          ghp-import -n -f site
+
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push origin gh-pages --force
