@@ -1,6 +1,8 @@
 theme:
   logo: images/likelion_kor_logo_renew.svg
   name: material
+  features:
+   - content.code.copy  # 📋 복사 버튼 활성화
 edit_uri: edit/main/docs
 extra_css:
 - stylesheets/custom.css
